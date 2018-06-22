@@ -1,9 +1,17 @@
 package com.example.stud.musicapp.topsongs;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import com.example.stud.musicapp.R;
+import com.example.stud.musicapp.api.ApiService;
+import com.example.stud.musicapp.api.Tracks;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SongDetailsActivity extends AppCompatActivity {
 
@@ -28,6 +36,26 @@ public class SongDetailsActivity extends AppCompatActivity {
 
         getSupportActionBar().setTitle(track);
         getSupportActionBar().setSubtitle(artist);
+
+        ApiService.getService().getTrack(trackId).enqueue(new Callback<Tracks>() {
+            @Override
+            public void onResponse(@NonNull Call<Tracks> call, @NonNull Response<Tracks> response) {
+                Toast.makeText(
+                        SongDetailsActivity.this,
+                        "Pobrano dane", Toast.LENGTH_SHORT
+                ).show();
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Tracks> call, @NonNull Throwable t) {
+                Toast.makeText(
+                        SongDetailsActivity.this,
+                        "Błąd pobierania danych: " + t.getLocalizedMessage(),
+                        Toast.LENGTH_SHORT
+                ).show();
+
+            }
+        });
     }
 
     @Override
